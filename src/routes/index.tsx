@@ -130,9 +130,9 @@ function LandingPage() {
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
                   Pro
                 </p>
-                <div className="flex items-baseline gap-2">
-                  <p className="font-serif text-5xl text-foreground">$9</p>
-                  <p className="text-muted-foreground">– $12 USD / month</p>
+                <div className="flex flex-col">
+                  <p className="font-serif text-5xl text-foreground">$12</p>
+                  <p className="text-muted-foreground text-sm uppercase tracking-wider mt-1">USD / month</p>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">Cancel anytime</p>
               </div>
