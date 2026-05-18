@@ -91,7 +91,7 @@ function LandingPage() {
       </main>
 
       {/* Pricing Section */}
-      <section className="border-t border-border">
+      <section id="pricing" className="border-t border-border">
         <div className="max-w-6xl mx-auto px-6 py-24 lg:py-32">
           <div className="text-center mb-16">
             <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">
