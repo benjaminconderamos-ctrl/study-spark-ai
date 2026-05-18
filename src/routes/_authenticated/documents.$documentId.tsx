@@ -13,6 +13,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { processDocument, deleteDocument } from "@/lib/documents.functions";
 import { SummaryTab } from "@/components/documents/SummaryTab";
 import { FlashcardsTab } from "@/components/documents/FlashcardsTab";
+import { QuizTab } from "@/components/documents/QuizTab";
+import { ChatTab } from "@/components/documents/ChatTab";
 
 export const Route = createFileRoute("/_authenticated/documents/$documentId")({
   component: DocumentDetailPage,
@@ -148,23 +150,12 @@ function DocumentDetailPage() {
           <FlashcardsTab documentId={documentId} ready={isReady} />
         </TabsContent>
         <TabsContent value="quiz" className="pt-8">
-          <ComingSoon ready={isReady} feature="Quizzes" phase="Phase 6" />
+          <QuizTab documentId={documentId} ready={isReady} />
         </TabsContent>
         <TabsContent value="chat" className="pt-8">
-          <ComingSoon ready={isReady} feature="Tutor chat" phase="Phase 7" />
+          <ChatTab documentId={documentId} ready={isReady} />
         </TabsContent>
       </Tabs>
-    </div>
-  );
-}
-
-function ComingSoon({ ready, feature, phase }: { ready: boolean; feature: string; phase: string }) {
-  return (
-    <div className="border border-dashed border-border rounded-lg py-16 text-center">
-      <p className="font-serif text-2xl text-foreground">{feature}</p>
-      <p className="text-sm text-muted-foreground mt-2">
-        {ready ? `${phase} wires this up next.` : "Available once the document finishes processing."}
-      </p>
     </div>
   );
 }
