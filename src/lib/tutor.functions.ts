@@ -57,7 +57,7 @@ export const sendTutorMessage = createServerFn({ method: "POST" })
     if (error || !session) throw new Error("Session not found");
     if (session.user_id !== userId) throw new Error("Forbidden");
 
-    const { isProUser } = await import("./entitlements.functions");
+    const { isProUser } = await import("./entitlements.server");
     if (!(await isProUser(userId))) {
       throw new Error("AI tutor is a Pro feature. Upgrade to StudyFlow Pro to chat with your documents.");
     }
