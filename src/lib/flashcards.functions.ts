@@ -24,7 +24,7 @@ export const generateFlashcards = createServerFn({ method: "POST" })
     if (doc.user_id !== userId) throw new Error("Forbidden");
     if (doc.status !== "ready") throw new Error("Document is not ready yet.");
 
-    const { isProUser, FREE_MAX_FLASHCARDS } = await import("./entitlements.functions");
+    const { isProUser, FREE_MAX_FLASHCARDS } = await import("./entitlements.server");
     const pro = await isProUser(userId);
     const requested = pro ? data.count : Math.min(data.count, FREE_MAX_FLASHCARDS);
 
