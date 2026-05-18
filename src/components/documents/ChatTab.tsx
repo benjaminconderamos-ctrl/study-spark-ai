@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { startChatSession, sendTutorMessage } from "@/lib/tutor.functions";
+import { useStudyTimer } from "@/hooks/use-study-timer";
 
 type Message = {
   id: string;
@@ -23,6 +24,7 @@ export function ChatTab({ documentId, ready }: { documentId: string; ready: bool
   const [sending, setSending] = useState(false);
   const [localMessages, setLocalMessages] = useState<Message[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+  useStudyTimer("chat", documentId, ready);
 
   useEffect(() => {
     if (!ready) return;

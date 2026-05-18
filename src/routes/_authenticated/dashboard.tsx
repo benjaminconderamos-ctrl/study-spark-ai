@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
+import { useT } from "@/i18n/I18nProvider";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
@@ -43,6 +44,7 @@ function QuickAction({ to, icon: Icon, title, desc }: { to: string; icon: typeof
 }
 
 function DashboardPage() {
+  const { t } = useT();
   const { data: stats, isLoading } = useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
@@ -87,35 +89,35 @@ function DashboardPage() {
   return (
     <div className="px-6 md:px-12 py-10 max-w-6xl mx-auto">
       <PageHeader
-        eyebrow="Workspace"
-        title="Good to see you."
-        description="Pick up where you left off, or start something new."
+        eyebrow={t("dash.eyebrow")}
+        title={t("dash.title")}
+        description={t("dash.desc")}
         actions={
           <Button asChild>
-            <Link to="/documents"><Upload className="h-4 w-4 mr-2" strokeWidth={1.5} />Upload PDF</Link>
+            <Link to="/documents"><Upload className="h-4 w-4 mr-2" strokeWidth={1.5} />{t("dash.uploadPdf")}</Link>
           </Button>
         }
       />
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-        <StatCard label="Documents" value={stats?.documentCount ?? 0} hint={stats?.documentCount ? "In your library" : "No uploads yet"} loading={isLoading} />
-        <StatCard label="Flashcards" value={stats?.flashcardCount ?? 0} hint="Across all decks" loading={isLoading} />
-        <StatCard label="Quizzes taken" value={stats?.attemptCount ?? 0} hint={stats?.avgPct != null ? `Average ${stats.avgPct}%` : "No attempts yet"} loading={isLoading} />
-        <StatCard label="Avg score" value={stats?.avgPct != null ? `${stats.avgPct}%` : "—"} hint="Last 20 attempts" loading={isLoading} />
+        <StatCard label={t("dash.documents")} value={stats?.documentCount ?? 0} hint={stats?.documentCount ? t("dash.inLibrary") : t("dash.noUploads")} loading={isLoading} />
+        <StatCard label={t("dash.flashcards")} value={stats?.flashcardCount ?? 0} hint={t("dash.acrossDecks")} loading={isLoading} />
+        <StatCard label={t("dash.quizzesTaken")} value={stats?.attemptCount ?? 0} hint={stats?.avgPct != null ? `${t("dash.average")} ${stats.avgPct}%` : t("dash.noAttempts")} loading={isLoading} />
+        <StatCard label={t("dash.avgScore")} value={stats?.avgPct != null ? `${stats.avgPct}%` : "—"} hint={t("dash.last20")} loading={isLoading} />
       </section>
 
       <section className="space-y-4">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Quick actions</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{t("dash.quickActions")}</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <QuickAction to="/documents" icon={Upload} title="Upload a PDF" desc="Start a new study workspace" />
-          <QuickAction to="/documents" icon={FileText} title="Generate a summary" desc="Distill any document" />
-          <QuickAction to="/documents" icon={Brain} title="Make flashcards" desc="Active recall, automatically" />
-          <QuickAction to="/documents" icon={MessageSquare} title="Ask the tutor" desc="Chat with your sources" />
+          <QuickAction to="/documents" icon={Upload} title={t("dash.qa.upload.title")} desc={t("dash.qa.upload.desc")} />
+          <QuickAction to="/documents" icon={FileText} title={t("dash.qa.summary.title")} desc={t("dash.qa.summary.desc")} />
+          <QuickAction to="/documents" icon={Brain} title={t("dash.qa.cards.title")} desc={t("dash.qa.cards.desc")} />
+          <QuickAction to="/documents" icon={MessageSquare} title={t("dash.qa.tutor.title")} desc={t("dash.qa.tutor.desc")} />
         </div>
       </section>
 
       <section className="mt-16 space-y-4">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Recent documents</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{t("dash.recent")}</p>
         {isLoading ? (
           <Skeleton className="h-32 w-full" />
         ) : stats && stats.recent.length > 0 ? (
@@ -139,10 +141,10 @@ function DashboardPage() {
           </div>
         ) : (
           <div className="border border-dashed border-border rounded-lg py-16 text-center">
-            <p className="font-serif text-2xl text-foreground">Nothing here yet</p>
-            <p className="text-sm text-muted-foreground mt-2 mb-6">Upload your first PDF to get started.</p>
+            <p className="font-serif text-2xl text-foreground">{t("dash.empty.title")}</p>
+            <p className="text-sm text-muted-foreground mt-2 mb-6">{t("dash.empty.desc")}</p>
             <Button asChild>
-              <Link to="/documents"><Upload className="h-4 w-4 mr-2" strokeWidth={1.5} />Upload PDF</Link>
+              <Link to="/documents"><Upload className="h-4 w-4 mr-2" strokeWidth={1.5} />{t("dash.uploadPdf")}</Link>
             </Button>
           </div>
         )}

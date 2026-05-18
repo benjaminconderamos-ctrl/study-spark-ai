@@ -7,11 +7,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { generateSummary } from "@/lib/summary.functions";
+import { useStudyTimer } from "@/hooks/use-study-timer";
 import type { Summary } from "@/lib/ai/services/summary.service";
 
 export function SummaryTab({ documentId, ready }: { documentId: string; ready: boolean }) {
   const run = useServerFn(generateSummary);
   const [busy, setBusy] = useState(false);
+  useStudyTimer("summary", documentId, ready);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["summary", documentId],

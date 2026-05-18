@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { generateFlashcards, recordFlashcardReview } from "@/lib/flashcards.functions";
+import { useStudyTimer } from "@/hooks/use-study-timer";
 
 type Card = {
   id: string;
@@ -29,6 +30,7 @@ export function FlashcardsTab({ documentId, ready }: { documentId: string; ready
   const runGen = useServerFn(generateFlashcards);
   const runReview = useServerFn(recordFlashcardReview);
   const [busy, setBusy] = useState(false);
+  useStudyTimer("flashcards", documentId, ready);
 
   const { data: deck, isLoading, refetch } = useQuery({
     queryKey: ["deck", documentId],
