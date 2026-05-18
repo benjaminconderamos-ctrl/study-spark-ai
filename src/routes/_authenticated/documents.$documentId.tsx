@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { processDocument, deleteDocument } from "@/lib/documents.functions";
+import { SummaryTab } from "@/components/documents/SummaryTab";
 
 export const Route = createFileRoute("/_authenticated/documents/$documentId")({
   component: DocumentDetailPage,
