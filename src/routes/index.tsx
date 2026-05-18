@@ -76,7 +76,7 @@ function LandingPage() {
       <footer className="border-t border-border">
         <div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between text-xs font-mono text-muted-foreground">
           <span>© StudyFlow AI</span>
-          <span>Built on Lovable</span>
+          <span>Built by Benjamin CR</span>
         </div>
       </footer>
     </div>
