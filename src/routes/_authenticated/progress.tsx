@@ -120,7 +120,7 @@ function ProgressPage() {
   const minutes = (sec: number) => Math.max(0, Math.round(sec / 60));
 
   return (
-    <div className="px-6 md:px-12 py-10 max-w-6xl mx-auto">
+    <div className="px-4 sm:px-6 md:px-12 py-6 sm:py-10 max-w-6xl mx-auto">
       <PageHeader
         eyebrow={t("progress.eyebrow")}
         title={t("progress.title")}

@@ -19,7 +19,7 @@ function SettingsPage() {
   const { user } = useAuth();
   const { t, lang, setLang } = useT();
   return (
-    <div className="px-6 md:px-12 py-10 max-w-3xl mx-auto">
+    <div className="px-4 sm:px-6 md:px-12 py-6 sm:py-10 max-w-3xl mx-auto">
       <PageHeader eyebrow={t("settings.eyebrow")} title={t("settings.title")} />
       <dl className="divide-y divide-border border-y border-border">
         <div className="flex justify-between py-4">
