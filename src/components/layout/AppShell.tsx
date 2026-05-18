@@ -2,6 +2,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/i18n/I18nProvider";
 import { LayoutDashboard, FileText, Settings as SettingsIcon, LogOut, LineChart } from "lucide-react";
@@ -24,6 +25,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen flex bg-background text-foreground">
+      {/* Desktop sidebar */}
       <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-border bg-sidebar px-5 py-6">
         <div className="mb-10">
           <Logo to="/dashboard" />
@@ -41,26 +43,55 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={signOut}
-          className="justify-start text-muted-foreground hover:text-foreground"
-        >
-          <LogOut className="h-4 w-4 mr-2" strokeWidth={1.5} />
-          {t("nav.signOut")}
-        </Button>
+        <div className="flex flex-col gap-1 pt-3 border-t border-border">
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={signOut}
+            className="justify-start text-muted-foreground hover:text-foreground"
+          >
+            <LogOut className="h-4 w-4 mr-2" strokeWidth={1.5} />
+            {t("nav.signOut")}
+          </Button>
+        </div>
       </aside>
 
-      <main className="flex-1 min-w-0">
-        <div className="md:hidden flex items-center justify-between border-b border-border px-5 py-4">
+      <main className="flex-1 min-w-0 pb-20 md:pb-0">
+        {/* Mobile top bar */}
+        <div className="md:hidden sticky top-0 z-30 flex items-center justify-between border-b border-border bg-background/85 backdrop-blur px-4 py-3">
           <Logo to="/dashboard" />
-          <Button variant="ghost" size="sm" onClick={signOut}>
-            <LogOut className="h-4 w-4" strokeWidth={1.5} />
-          </Button>
+          <div className="flex items-center gap-1">
+            <ThemeToggle compact />
+            <Button variant="ghost" size="icon" onClick={signOut} aria-label={t("nav.signOut")}>
+              <LogOut className="h-4 w-4" strokeWidth={1.5} />
+            </Button>
+          </div>
         </div>
         {children}
       </main>
+
+      {/* Mobile bottom tab bar */}
+      <nav
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border bg-background/95 backdrop-blur"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
+        <ul className="grid grid-cols-4">
+          {NAV.map(({ to, key, icon: Icon }) => (
+            <li key={to}>
+              <Link
+                to={to}
+                activeProps={{ className: "text-foreground" }}
+                inactiveProps={{ className: "text-muted-foreground" }}
+                className="flex flex-col items-center gap-1 py-2.5 text-[10px] font-mono uppercase tracking-[0.18em]"
+              >
+                <Icon className="h-5 w-5" strokeWidth={1.5} />
+                <span>{t(key)}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
   );
 }
@@ -77,15 +108,15 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <header className="flex flex-wrap items-end justify-between gap-6 border-b border-border pb-8 mb-10">
-      <div className="space-y-2 max-w-2xl">
+    <header className="flex flex-wrap items-end justify-between gap-4 sm:gap-6 border-b border-border pb-6 sm:pb-8 mb-8 sm:mb-10">
+      <div className="space-y-2 max-w-2xl min-w-0">
         {eyebrow ? (
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{eyebrow}</p>
+          <p className="font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-muted-foreground">{eyebrow}</p>
         ) : null}
-        <h1 className="font-serif text-4xl md:text-5xl text-foreground">{title}</h1>
-        {description ? <p className="text-muted-foreground text-base">{description}</p> : null}
+        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground leading-[1.05]">{title}</h1>
+        {description ? <p className="text-muted-foreground text-sm sm:text-base">{description}</p> : null}
       </div>
-      {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
+      {actions ? <div className="flex items-center gap-2 flex-wrap">{actions}</div> : null}
     </header>
   );
 }
