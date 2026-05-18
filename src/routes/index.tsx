@@ -268,7 +268,7 @@ function LandingPage() {
                 ))}
               </ul>
 
-              <Button className="mt-8 w-full" onClick={handleProClick}>
+              <Button className="mt-8 w-full" onClick={() => openUpgrade("max")}>
                 {t("landing.pricing.max.cta")}
               </Button>
             </div>
@@ -302,7 +302,7 @@ function LandingPage() {
           <span>{t("landing.footer.built")}</span>
         </div>
       </footer>
-      <UpgradeProDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />
+      <UpgradeProDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} priceId={upgradePriceId} />
     </div>
   );
 }
