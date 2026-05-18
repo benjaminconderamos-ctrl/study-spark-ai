@@ -14,6 +14,73 @@ export type Database = {
   }
   public: {
     Tables: {
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["chat_role"]
+          session_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["chat_role"]
+          session_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["chat_role"]
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "chat_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_sessions: {
+        Row: {
+          created_at: string
+          document_id: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_id: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_sessions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       document_chunks: {
         Row: {
           chunk_index: number
@@ -408,6 +475,41 @@ export type Database = {
           },
         ]
       }
+      study_sessions: {
+        Row: {
+          activity: Database["public"]["Enums"]["study_activity"]
+          created_at: string
+          document_id: string | null
+          duration_seconds: number
+          id: string
+          user_id: string
+        }
+        Insert: {
+          activity: Database["public"]["Enums"]["study_activity"]
+          created_at?: string
+          document_id?: string | null
+          duration_seconds?: number
+          id?: string
+          user_id: string
+        }
+        Update: {
+          activity?: Database["public"]["Enums"]["study_activity"]
+          created_at?: string
+          document_id?: string | null
+          duration_seconds?: number
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "study_sessions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       summaries: {
         Row: {
           content: Json
@@ -480,6 +582,7 @@ export type Database = {
     Enums: {
       app_role: "admin" | "user"
       card_difficulty: "easy" | "medium" | "hard"
+      chat_role: "user" | "assistant"
       document_status:
         | "uploading"
         | "pending"
@@ -488,6 +591,7 @@ export type Database = {
         | "failed"
       quiz_question_type: "multiple_choice" | "true_false" | "open"
       review_rating: "again" | "hard" | "good" | "easy"
+      study_activity: "summary" | "flashcards" | "quiz" | "chat" | "upload"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -617,6 +721,7 @@ export const Constants = {
     Enums: {
       app_role: ["admin", "user"],
       card_difficulty: ["easy", "medium", "hard"],
+      chat_role: ["user", "assistant"],
       document_status: [
         "uploading",
         "pending",
@@ -626,6 +731,7 @@ export const Constants = {
       ],
       quiz_question_type: ["multiple_choice", "true_false", "open"],
       review_rating: ["again", "hard", "good", "easy"],
+      study_activity: ["summary", "flashcards", "quiz", "chat", "upload"],
     },
   },
 } as const
