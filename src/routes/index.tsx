@@ -73,6 +73,92 @@ function LandingPage() {
         </section>
       </main>
 
+      {/* Pricing Section */}
+      <section className="border-t border-border">
+        <div className="max-w-6xl mx-auto px-6 py-24 lg:py-32">
+          <div className="text-center mb-16">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">
+              Pricing
+            </p>
+            <h2 className="font-serif text-4xl md:text-5xl text-foreground">
+              Start free. Upgrade when you need more.
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {/* Free Plan */}
+            <div className="border border-border bg-card rounded-lg p-8 flex flex-col">
+              <div className="mb-8">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                  Free
+                </p>
+                <p className="font-serif text-5xl text-foreground">$0</p>
+                <p className="text-sm text-muted-foreground mt-1">Forever free</p>
+              </div>
+
+              <ul className="space-y-4 flex-1">
+                {[
+                  "3 documents / month",
+                  "Up to 10 flashcards per doc",
+                  "Basic summary",
+                ].map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-sm text-foreground">
+                    <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-accent-ink shrink-0" />
+                    {feature}
+                  </li>
+                ))}
+                <li className="flex items-start gap-3 text-sm text-muted-foreground">
+                  <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-muted-foreground/30 shrink-0" />
+                  No AI tutor
+                </li>
+              </ul>
+
+              <Button variant="outline" className="mt-8 w-full" asChild>
+                <Link to="/signup">Get started</Link>
+              </Button>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="border border-border bg-card rounded-lg p-8 flex flex-col relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="font-mono text-[10px] uppercase tracking-[0.15em] bg-primary text-primary-foreground px-3 py-1 rounded-full">
+                  Most popular
+                </span>
+              </div>
+
+              <div className="mb-8">
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                  Pro
+                </p>
+                <div className="flex items-baseline gap-2">
+                  <p className="font-serif text-5xl text-foreground">$9</p>
+                  <p className="text-muted-foreground">– $12 USD / month</p>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">Cancel anytime</p>
+              </div>
+
+              <ul className="space-y-4 flex-1">
+                {[
+                  "Unlimited documents",
+                  "Unlimited flashcards & quizzes",
+                  "AI tutor included",
+                  "Export to Anki / PDF",
+                ].map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-sm text-foreground">
+                    <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-accent-ink shrink-0" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+
+              <Button className="mt-8 w-full" asChild>
+                <Link to="/signup">Start Pro trial</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-border">
         <div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between text-xs font-mono text-muted-foreground">
           <span>© StudyFlow AI</span>
