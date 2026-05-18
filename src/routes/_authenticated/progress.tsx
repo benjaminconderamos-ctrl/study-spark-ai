@@ -1,10 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { Flame, Clock, Activity as ActivityIcon, ArrowUpRight } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
+import { Flame, Clock, Activity as ActivityIcon, ArrowUpRight, RotateCcw, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { PageHeader } from "@/components/layout/AppShell";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/i18n/I18nProvider";
+import { resetStudyProgress } from "@/lib/study.functions";
 
 export const Route = createFileRoute("/_authenticated/progress")({
   component: ProgressPage,
@@ -119,12 +124,45 @@ function ProgressPage() {
 
   const minutes = (sec: number) => Math.max(0, Math.round(sec / 60));
 
+  const qc = useQueryClient();
+  const runReset = useServerFn(resetStudyProgress);
+  const [resetting, setResetting] = useState(false);
+  const handleReset = async () => {
+    if (!confirm(t("progress.resetConfirm"))) return;
+    setResetting(true);
+    try {
+      await runReset({});
+      toast.success(t("progress.resetDone"));
+      qc.invalidateQueries({ queryKey: ["study-progress"] });
+      qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed");
+    } finally {
+      setResetting(false);
+    }
+  };
+
   return (
     <div className="px-4 sm:px-6 md:px-12 py-6 sm:py-10 max-w-6xl mx-auto">
       <PageHeader
         eyebrow={t("progress.eyebrow")}
         title={t("progress.title")}
         description={t("progress.desc")}
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleReset}
+            disabled={resetting || sessions.length === 0}
+          >
+            {resetting ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <RotateCcw className="h-4 w-4 mr-2" strokeWidth={1.5} />
+            )}
+            {t("progress.reset")}
+          </Button>
+        }
       />
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
