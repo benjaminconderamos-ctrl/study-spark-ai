@@ -141,7 +141,7 @@ function DocumentDetailPage() {
         </TabsList>
 
         <TabsContent value="summary" className="pt-8">
-          <ComingSoon ready={isReady} feature="Summaries" phase="Phase 4" />
+          <SummaryTab documentId={documentId} ready={isReady} />
         </TabsContent>
         <TabsContent value="flashcards" className="pt-8">
           <ComingSoon ready={isReady} feature="Flashcards" phase="Phase 5" />
