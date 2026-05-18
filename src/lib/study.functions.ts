@@ -4,15 +4,15 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const ActivitySchema = z.enum(["summary", "flashcards", "quiz", "chat", "upload"]);
 
+const LogInput = z.object({
+  activity: ActivitySchema,
+  documentId: z.string().uuid().nullable().optional(),
+  durationSeconds: z.number().int().min(1).max(60 * 60 * 6),
+});
+
 export const logStudySession = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(
-    z.object({
-      activity: ActivitySchema,
-      documentId: z.string().uuid().nullable().optional(),
-      durationSeconds: z.number().int().min(1).max(60 * 60 * 6),
-    }).parse,
-  )
+  .inputValidator((input: unknown) => LogInput.parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const { error } = await supabase.from("study_sessions").insert({
