@@ -217,7 +217,7 @@ function LandingPage() {
                 ))}
               </ul>
 
-              <Button className="mt-8 w-full" onClick={handleProClick}>
+              <Button className="mt-8 w-full" onClick={() => openUpgrade("pro")}>
                 {t("landing.pricing.pro.cta")}
               </Button>
             </div>
