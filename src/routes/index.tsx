@@ -27,6 +27,7 @@ function LandingPage() {
   const navigate = useNavigate();
   const { t } = useT();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
 
   const handleProClick = () => {
     if (user) setUpgradeOpen(true);
