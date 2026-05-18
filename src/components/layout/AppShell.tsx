@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/i18n/I18nProvider";
 import { LayoutDashboard, FileText, Settings as SettingsIcon, LogOut, LineChart } from "lucide-react";
+import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 
 const NAV = [
   { to: "/dashboard", key: "nav.dashboard", icon: LayoutDashboard },
@@ -24,7 +25,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen flex bg-background text-foreground">
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <PaymentTestModeBanner />
+      <div className="flex flex-1 min-h-0">
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-border bg-sidebar px-5 py-6">
         <div className="mb-10">
