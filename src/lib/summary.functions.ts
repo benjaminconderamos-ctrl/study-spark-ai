@@ -18,7 +18,6 @@ export const generateSummary = createServerFn({ method: "POST" })
       .select("id, user_id, status")
       .eq("id", data.documentId)
       .single();
-
     if (error || !doc) throw new Error("Document not found");
     if (doc.user_id !== userId) throw new Error("Forbidden");
     if (doc.status !== "ready") throw new Error("Document is not ready yet.");
@@ -32,7 +31,6 @@ export const generateSummary = createServerFn({ method: "POST" })
         { document_id: doc.id, user_id: userId, content: summary },
         { onConflict: "document_id" },
       );
-
     if (upErr) throw new Error(upErr.message);
 
     return { summary };
