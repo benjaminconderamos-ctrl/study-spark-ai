@@ -22,73 +22,99 @@ import type { MindMap } from "@/lib/ai/services/mindmap.service";
 
 type Props = { documentId: string; ready: boolean; title?: string };
 
-const LEVEL_STYLES: Record<number, React.CSSProperties> = {
-  0: {
-    background: "hsl(217 91% 60%)",
-    color: "white",
-    border: "2px solid hsl(217 91% 50%)",
-    borderRadius: 16,
-    padding: "14px 20px",
-    fontWeight: 600,
-    fontSize: 15,
-    minWidth: 180,
-    textAlign: "center",
-    boxShadow: "0 10px 30px -10px hsl(217 91% 60% / 0.5)",
-  },
-  1: {
-    background: "hsl(270 70% 60%)",
-    color: "white",
-    border: "2px solid hsl(270 70% 50%)",
-    borderRadius: 12,
-    padding: "10px 14px",
-    fontWeight: 500,
-    fontSize: 13,
-    minWidth: 140,
-    textAlign: "center",
-    boxShadow: "0 6px 20px -8px hsl(270 70% 60% / 0.5)",
-  },
-  2: {
-    background: "hsl(243 75% 65%)",
-    color: "white",
-    border: "2px solid hsl(243 75% 55%)",
-    borderRadius: 10,
-    padding: "8px 12px",
-    fontWeight: 400,
-    fontSize: 12,
-    minWidth: 120,
-    textAlign: "center",
-    boxShadow: "0 4px 14px -6px hsl(243 75% 65% / 0.5)",
-  },
-};
+// Minimalist palette: neutral cards, single accent per level (left bar + dot).
+const LEVEL_ACCENT = {
+  0: "hsl(217 91% 60%)", // blue
+  1: "hsl(270 70% 60%)", // purple
+  2: "hsl(243 75% 65%)", // indigo
+} as const;
 
-function buildGraph(mindmap: MindMap, layout: "radial" | "vertical"): { nodes: Node[]; edges: Edge[] } {
+function nodeLabel(level: 0 | 1 | 2, label: string) {
+  const accent = LEVEL_ACCENT[level];
+  const fontSize = level === 0 ? 15 : level === 1 ? 13 : 12;
+  const fontWeight = level === 0 ? 600 : level === 1 ? 500 : 400;
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        fontSize,
+        fontWeight,
+        lineHeight: 1.25,
+        letterSpacing: level === 0 ? "-0.01em" : 0,
+      }}
+    >
+      <span
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: 999,
+          background: accent,
+          flexShrink: 0,
+        }}
+      />
+      <span>{label}</span>
+    </div>
+  );
+}
+
+function nodeStyle(level: 0 | 1 | 2): React.CSSProperties {
+  const accent = LEVEL_ACCENT[level];
+  const padX = level === 0 ? 18 : level === 1 ? 14 : 12;
+  const padY = level === 0 ? 12 : level === 1 ? 9 : 7;
+  const minWidth = level === 0 ? 180 : level === 1 ? 150 : 130;
+  const maxWidth = level === 0 ? 260 : level === 1 ? 220 : 200;
+  return {
+    background: "hsl(var(--card))",
+    color: "hsl(var(--card-foreground))",
+    border: "1px solid hsl(var(--border))",
+    borderLeft: `3px solid ${accent}`,
+    borderRadius: 8,
+    padding: `${padY}px ${padX}px`,
+    minWidth,
+    maxWidth,
+    boxShadow: "0 1px 2px hsl(0 0% 0% / 0.04)",
+    textAlign: "left",
+  };
+}
+
+const EDGE_STYLE = {
+  stroke: "hsl(var(--border))",
+  strokeWidth: 1,
+} as const;
+
+function buildGraph(mindmap: MindMap, layout: "horizontal" | "vertical"): {
+  nodes: Node[];
+  edges: Edge[];
+} {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
 
   if (layout === "vertical") {
-    // Top-down layout for mobile
-    const centerX = 0;
+    // ---- Mobile: top-down columns of children under each branch ----
+    const ROOT_Y = 0;
+    const BRANCH_Y_GAP = 200;
+    const CHILD_X_GAP = 170;
+    const CHILD_Y = 110;
+
     nodes.push({
       id: "root",
-      data: { label: mindmap.central },
-      position: { x: centerX, y: 0 },
-      style: LEVEL_STYLES[0],
+      data: { label: nodeLabel(0, mindmap.central) },
+      position: { x: 0, y: ROOT_Y },
+      style: nodeStyle(0),
       sourcePosition: "bottom" as never,
       targetPosition: "top" as never,
     });
 
-    const branchSpacingY = 220;
-    const childSpacingY = 70;
-    let cursorY = 160;
-
     mindmap.branches.forEach((branch, bi) => {
+      const branchY = ROOT_Y + 140 + bi * BRANCH_Y_GAP;
       const branchId = `b-${bi}`;
-      const branchY = cursorY;
       nodes.push({
         id: branchId,
-        data: { label: branch.title },
-        position: { x: centerX, y: branchY },
-        style: LEVEL_STYLES[1],
+        data: { label: nodeLabel(1, branch.title) },
+        position: { x: 0, y: branchY },
+        style: nodeStyle(1),
         sourcePosition: "bottom" as never,
         targetPosition: "top" as never,
       });
@@ -97,17 +123,18 @@ function buildGraph(mindmap: MindMap, layout: "radial" | "vertical"): { nodes: N
         source: "root",
         target: branchId,
         type: "smoothstep",
-        style: { stroke: "hsl(270 70% 60%)", strokeWidth: 2 },
+        style: EDGE_STYLE,
       });
 
+      const n = branch.children.length;
       branch.children.forEach((child, ci) => {
+        const offsetX = (ci - (n - 1) / 2) * CHILD_X_GAP;
         const childId = `c-${bi}-${ci}`;
-        const offsetX = (ci - (branch.children.length - 1) / 2) * 180;
         nodes.push({
           id: childId,
-          data: { label: child },
-          position: { x: centerX + offsetX, y: branchY + 110 },
-          style: LEVEL_STYLES[2],
+          data: { label: nodeLabel(2, child) },
+          position: { x: offsetX, y: branchY + CHILD_Y },
+          style: nodeStyle(2),
           sourcePosition: "bottom" as never,
           targetPosition: "top" as never,
         });
@@ -116,67 +143,93 @@ function buildGraph(mindmap: MindMap, layout: "radial" | "vertical"): { nodes: N
           source: branchId,
           target: childId,
           type: "smoothstep",
-          style: { stroke: "hsl(243 75% 65%)", strokeWidth: 1.5 },
+          style: EDGE_STYLE,
         });
       });
-
-      cursorY += branchSpacingY + Math.max(0, childSpacingY);
     });
   } else {
-    // Radial layout
-    nodes.push({
-      id: "root",
-      data: { label: mindmap.central },
-      position: { x: 0, y: 0 },
-      style: LEVEL_STYLES[0],
-    });
+    // ---- Desktop: balanced symmetric tree, branches on left and right of root ----
+    // Each branch gets a vertical slot sized by its children, then children stack
+    // vertically next to the branch. Left / right alternation keeps it organized.
+    const ROW_HEIGHT = 56; // vertical space per child row
+    const BRANCH_GAP = 36; // padding between branches
+    const ROOT_X_OFFSET = 280; // distance root -> branch
+    const CHILD_X_OFFSET = 240; // distance branch -> child
 
-    const branchRadius = 320;
-    const childRadius = 200;
-    const branchCount = mindmap.branches.length;
+    const splitIndex = Math.ceil(mindmap.branches.length / 2);
+    const leftBranches = mindmap.branches.slice(0, splitIndex);
+    const rightBranches = mindmap.branches.slice(splitIndex);
 
-    mindmap.branches.forEach((branch, bi) => {
-      const angle = (bi / branchCount) * Math.PI * 2 - Math.PI / 2;
-      const bx = Math.cos(angle) * branchRadius;
-      const by = Math.sin(angle) * branchRadius;
-      const branchId = `b-${bi}`;
-      nodes.push({
-        id: branchId,
-        data: { label: branch.title },
-        position: { x: bx, y: by },
-        style: LEVEL_STYLES[1],
-      });
-      edges.push({
-        id: `e-root-${branchId}`,
-        source: "root",
-        target: branchId,
-        type: "smoothstep",
-        style: { stroke: "hsl(270 70% 60%)", strokeWidth: 2 },
-      });
+    const slotHeight = (b: MindMap["branches"][number]) =>
+      Math.max(1, b.children.length) * ROW_HEIGHT + BRANCH_GAP;
 
-      const childCount = branch.children.length;
-      const spread = Math.PI / 3;
-      branch.children.forEach((child, ci) => {
-        const childAngle =
-          angle + (childCount === 1 ? 0 : ((ci / (childCount - 1)) - 0.5) * spread);
-        const cx = bx + Math.cos(childAngle) * childRadius;
-        const cy = by + Math.sin(childAngle) * childRadius;
-        const childId = `c-${bi}-${ci}`;
+    const layoutSide = (
+      side: "left" | "right",
+      branches: MindMap["branches"],
+      startBi: number,
+    ) => {
+      const totalH = branches.reduce((sum, b) => sum + slotHeight(b), 0);
+      let cursorY = -totalH / 2;
+      const sign = side === "left" ? -1 : 1;
+      const branchX = sign * ROOT_X_OFFSET;
+      const childX = sign * (ROOT_X_OFFSET + CHILD_X_OFFSET);
+
+      branches.forEach((branch, idx) => {
+        const bi = startBi + idx;
+        const h = slotHeight(branch);
+        const branchCenterY = cursorY + h / 2;
+        const branchId = `b-${bi}`;
         nodes.push({
-          id: childId,
-          data: { label: child },
-          position: { x: cx, y: cy },
-          style: LEVEL_STYLES[2],
+          id: branchId,
+          data: { label: nodeLabel(1, branch.title) },
+          position: { x: branchX, y: branchCenterY },
+          style: nodeStyle(1),
+          sourcePosition: side === "left" ? ("left" as never) : ("right" as never),
+          targetPosition: side === "left" ? ("right" as never) : ("left" as never),
         });
         edges.push({
-          id: `e-${branchId}-${childId}`,
-          source: branchId,
-          target: childId,
+          id: `e-root-${branchId}`,
+          source: "root",
+          target: branchId,
           type: "smoothstep",
-          style: { stroke: "hsl(243 75% 65%)", strokeWidth: 1.5 },
+          style: EDGE_STYLE,
         });
+
+        const n = branch.children.length;
+        const childrenTotalH = n * ROW_HEIGHT;
+        branch.children.forEach((child, ci) => {
+          const childY = branchCenterY - childrenTotalH / 2 + ci * ROW_HEIGHT + ROW_HEIGHT / 2;
+          const childId = `c-${bi}-${ci}`;
+          nodes.push({
+            id: childId,
+            data: { label: nodeLabel(2, child) },
+            position: { x: childX, y: childY },
+            style: nodeStyle(2),
+            sourcePosition: side === "left" ? ("left" as never) : ("right" as never),
+            targetPosition: side === "left" ? ("right" as never) : ("left" as never),
+          });
+          edges.push({
+            id: `e-${branchId}-${childId}`,
+            source: branchId,
+            target: childId,
+            type: "smoothstep",
+            style: EDGE_STYLE,
+          });
+        });
+
+        cursorY += h;
       });
+    };
+
+    nodes.push({
+      id: "root",
+      data: { label: nodeLabel(0, mindmap.central) },
+      position: { x: 0, y: 0 },
+      style: nodeStyle(0),
     });
+
+    layoutSide("left", leftBranches, 0);
+    layoutSide("right", rightBranches, leftBranches.length);
   }
 
   return { nodes, edges };
@@ -184,7 +237,7 @@ function buildGraph(mindmap: MindMap, layout: "radial" | "vertical"): { nodes: N
 
 function MindMapCanvas({ mindmap, title }: { mindmap: MindMap; title?: string }) {
   const isMobile = useIsMobile();
-  const layout = isMobile ? "vertical" : "radial";
+  const layout: "horizontal" | "vertical" = isMobile ? "vertical" : "horizontal";
 
   const initial = useMemo(() => buildGraph(mindmap, layout), [mindmap, layout]);
   const [nodes, setNodes, onNodesChange] = useNodesState(initial.nodes);
