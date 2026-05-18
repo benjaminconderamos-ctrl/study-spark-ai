@@ -15,6 +15,7 @@ import { SummaryTab } from "@/components/documents/SummaryTab";
 import { FlashcardsTab } from "@/components/documents/FlashcardsTab";
 import { QuizTab } from "@/components/documents/QuizTab";
 import { ChatTab } from "@/components/documents/ChatTab";
+import { MindMapTab } from "@/components/documents/MindMapTab";
 
 export const Route = createFileRoute("/_authenticated/documents/$documentId")({
   component: DocumentDetailPage,
@@ -136,10 +137,11 @@ function DocumentDetailPage() {
       ) : null}
 
       <Tabs defaultValue="summary">
-        <TabsList>
+        <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="flashcards">Flashcards</TabsTrigger>
           <TabsTrigger value="quiz">Quiz</TabsTrigger>
+          <TabsTrigger value="mindmap">Mind Map</TabsTrigger>
           <TabsTrigger value="chat">Tutor</TabsTrigger>
         </TabsList>
 
@@ -151,6 +153,9 @@ function DocumentDetailPage() {
         </TabsContent>
         <TabsContent value="quiz" className="pt-8">
           <QuizTab documentId={documentId} ready={isReady} />
+        </TabsContent>
+        <TabsContent value="mindmap" className="pt-8">
+          <MindMapTab documentId={documentId} ready={isReady} title={doc.title} />
         </TabsContent>
         <TabsContent value="chat" className="pt-8">
           <ChatTab documentId={documentId} ready={isReady} />
