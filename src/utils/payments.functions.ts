@@ -65,13 +65,13 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       ui_mode: "embedded_page",
       return_url: data.returnUrl,
       customer: customerId,
-      managed_payments: { enabled: true } as any,
       metadata: { userId },
       subscription_data: {
         trial_period_days: 7,
         metadata: { userId },
       },
-    });
+      managed_payments: { enabled: true },
+    } as any);
 
     return session.client_secret;
   });
