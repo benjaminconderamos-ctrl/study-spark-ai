@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { UploadCloud, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { processDocument } from "@/lib/documents.functions";
+import { ensureCanUpload } from "@/lib/entitlements.functions";
 import { Button } from "@/components/ui/button";
 
 const MAX_BYTES = 20 * 1024 * 1024; // 20 MB
@@ -15,6 +16,7 @@ export function DocumentUploader() {
   const [drag, setDrag] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const runProcess = useServerFn(processDocument);
+  const checkUpload = useServerFn(ensureCanUpload);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -36,6 +38,16 @@ export function DocumentUploader() {
         const { data: userData } = await supabase.auth.getUser();
         const userId = userData.user?.id;
         if (!userId) throw new Error("Not authenticated");
+
+        // Enforce free-tier monthly limit before upload
+        try {
+          await checkUpload();
+        } catch (e) {
+          const message = e instanceof Error ? e.message : "Upload not allowed";
+          toast.error(message);
+          setBusy(false);
+          return;
+        }
 
         const path = `${userId}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
         const { error: upErr } = await supabase.storage
