@@ -27,11 +27,20 @@ function LandingPage() {
   const navigate = useNavigate();
   const { t } = useT();
   const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [upgradePriceId, setUpgradePriceId] = useState<string>("pro_monthly");
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
 
-  const handleProClick = () => {
-    if (user) setUpgradeOpen(true);
-    else navigate({ to: "/signup" });
+  const openUpgrade = (plan: "pro" | "max") => {
+    const priceId =
+      plan === "pro"
+        ? billing === "monthly" ? "pro_monthly" : "pro_annual"
+        : billing === "monthly" ? "max_monthly" : "max_annual";
+    if (user) {
+      setUpgradePriceId(priceId);
+      setUpgradeOpen(true);
+    } else {
+      navigate({ to: "/signup" });
+    }
   };
 
   return (
