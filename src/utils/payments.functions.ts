@@ -70,8 +70,8 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         trial_period_days: 7,
         metadata: { userId },
       },
-      managed_payments: { enabled: true },
-    } as any);
+      automatic_tax: { enabled: true },
+    });
 
     return session.client_secret;
   });
