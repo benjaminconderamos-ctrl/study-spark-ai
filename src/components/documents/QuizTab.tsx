@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { generateQuiz, submitQuizAttempt } from "@/lib/quiz.functions";
+import { useStudyTimer } from "@/hooks/use-study-timer";
 
 type Question = {
   id: string;
@@ -27,6 +28,7 @@ export function QuizTab({ documentId, ready }: { documentId: string; ready: bool
   const [busy, setBusy] = useState(false);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<{ score: number; total: number } | null>(null);
+  useStudyTimer("quiz", documentId, ready);
 
   const { data: quiz, isLoading, refetch } = useQuery({
     queryKey: ["quiz", documentId],
