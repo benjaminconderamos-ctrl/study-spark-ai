@@ -18,6 +18,8 @@ import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
 import { generateMindMap } from "@/lib/mindmap.functions";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useEntitlements } from "@/hooks/use-entitlements";
+import { UpgradeProDialog } from "@/components/UpgradeProDialog";
 import type { MindMap } from "@/lib/ai/services/mindmap.service";
 
 type Props = { documentId: string; ready: boolean; title?: string };
@@ -308,6 +310,8 @@ function MindMapCanvas({ mindmap, title }: { mindmap: MindMap; title?: string })
 export function MindMapTab({ documentId, ready, title }: Props) {
   const run = useServerFn(generateMindMap);
   const [mindmap, setMindmap] = useState<MindMap | null>(null);
+  const { data: ent } = useEntitlements();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -322,6 +326,24 @@ export function MindMapTab({ documentId, ready, title }: Props) {
       toast.error(err instanceof Error ? err.message : "Failed to generate mind map");
     },
   });
+
+  if (ent && !ent.mindMapAllowed) {
+    return (
+      <>
+        <div className="border border-dashed border-border rounded-lg py-16 text-center px-6">
+          <Network className="h-6 w-6 mx-auto text-muted-foreground mb-3" strokeWidth={1.25} />
+          <p className="font-serif text-2xl text-foreground">Mind maps are a Max feature</p>
+          <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
+            Upgrade to StudyFlow Max to generate automatic mind maps from your documents — plus exports, study plans and priority processing.
+          </p>
+          <Button className="mt-6" onClick={() => setUpgradeOpen(true)}>
+            Upgrade to Max
+          </Button>
+        </div>
+        <UpgradeProDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} priceId="max_monthly" />
+      </>
+    );
+  }
 
   if (!ready) {
     return (

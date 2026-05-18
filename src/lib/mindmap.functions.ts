@@ -12,6 +12,11 @@ export const generateMindMap = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
+    const { isMaxUser } = await import("./entitlements.server");
+    if (!(await isMaxUser(userId))) {
+      throw new Error("Mind maps are a Max plan feature. Upgrade to Max to unlock automatic mind maps.");
+    }
+
     const { data: doc, error } = await supabase
       .from("documents")
       .select("id, user_id, status")
