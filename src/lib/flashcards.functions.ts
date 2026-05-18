@@ -24,8 +24,12 @@ export const generateFlashcards = createServerFn({ method: "POST" })
     if (doc.user_id !== userId) throw new Error("Forbidden");
     if (doc.status !== "ready") throw new Error("Document is not ready yet.");
 
+    const { isProUser, FREE_MAX_FLASHCARDS } = await import("./entitlements.functions");
+    const pro = await isProUser(userId);
+    const requested = pro ? data.count : Math.min(data.count, FREE_MAX_FLASHCARDS);
+
     const { title, content } = await loadDocumentContext(doc.id);
-    const cards = await generateFlashcardsFromText(title, content, data.count);
+    const cards = await generateFlashcardsFromText(title, content, requested);
 
     // Replace any existing deck for this document.
     await supabaseAdmin
