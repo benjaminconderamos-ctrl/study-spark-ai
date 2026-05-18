@@ -131,7 +131,7 @@ function LandingPage() {
                   Pro
                 </p>
                 <div className="flex flex-col">
-                  <p className="font-serif text-5xl text-foreground">$12</p>
+                  <p className="font-serif text-5xl text-foreground">$12.99</p>
                   <p className="text-muted-foreground text-sm uppercase tracking-wider mt-1">USD / month</p>
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">Cancel anytime</p>
