@@ -88,6 +88,114 @@ export type Database = {
         }
         Relationships: []
       }
+      flashcard_decks: {
+        Row: {
+          created_at: string
+          document_id: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_id: string
+          id?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flashcard_decks_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flashcard_reviews: {
+        Row: {
+          flashcard_id: string
+          id: string
+          rating: Database["public"]["Enums"]["review_rating"]
+          reviewed_at: string
+          user_id: string
+        }
+        Insert: {
+          flashcard_id: string
+          id?: string
+          rating: Database["public"]["Enums"]["review_rating"]
+          reviewed_at?: string
+          user_id: string
+        }
+        Update: {
+          flashcard_id?: string
+          id?: string
+          rating?: Database["public"]["Enums"]["review_rating"]
+          reviewed_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flashcard_reviews_flashcard_id_fkey"
+            columns: ["flashcard_id"]
+            isOneToOne: false
+            referencedRelation: "flashcards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      flashcards: {
+        Row: {
+          answer: string
+          category: string | null
+          created_at: string
+          deck_id: string
+          difficulty: Database["public"]["Enums"]["card_difficulty"]
+          id: string
+          position: number
+          question: string
+        }
+        Insert: {
+          answer: string
+          category?: string | null
+          created_at?: string
+          deck_id: string
+          difficulty?: Database["public"]["Enums"]["card_difficulty"]
+          id?: string
+          position?: number
+          question: string
+        }
+        Update: {
+          answer?: string
+          category?: string | null
+          created_at?: string
+          deck_id?: string
+          difficulty?: Database["public"]["Enums"]["card_difficulty"]
+          id?: string
+          position?: number
+          question?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flashcards_deck_id_fkey"
+            columns: ["deck_id"]
+            isOneToOne: false
+            referencedRelation: "flashcard_decks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       processed_documents: {
         Row: {
           created_at: string
@@ -212,12 +320,14 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      card_difficulty: "easy" | "medium" | "hard"
       document_status:
         | "uploading"
         | "pending"
         | "processing"
         | "ready"
         | "failed"
+      review_rating: "again" | "hard" | "good" | "easy"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -346,6 +456,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      card_difficulty: ["easy", "medium", "hard"],
       document_status: [
         "uploading",
         "pending",
@@ -353,6 +464,7 @@ export const Constants = {
         "ready",
         "failed",
       ],
+      review_rating: ["again", "hard", "good", "easy"],
     },
   },
 } as const
