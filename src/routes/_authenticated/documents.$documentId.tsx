@@ -73,7 +73,7 @@ function DocumentDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="px-6 md:px-12 py-10 max-w-6xl mx-auto">
+      <div className="px-4 sm:px-6 md:px-12 py-6 sm:py-10 max-w-6xl mx-auto">
         <Skeleton className="h-10 w-2/3 mb-4" />
         <Skeleton className="h-4 w-1/3" />
       </div>
@@ -82,7 +82,7 @@ function DocumentDetailPage() {
 
   if (!doc) {
     return (
-      <div className="px-6 md:px-12 py-10 max-w-6xl mx-auto">
+      <div className="px-4 sm:px-6 md:px-12 py-6 sm:py-10 max-w-6xl mx-auto">
         <p className="text-muted-foreground">Document not found.</p>
       </div>
     );
@@ -92,7 +92,7 @@ function DocumentDetailPage() {
   const isWorking = doc.status === "pending" || doc.status === "processing";
 
   return (
-    <div className="px-6 md:px-12 py-10 max-w-6xl mx-auto">
+    <div className="px-4 sm:px-6 md:px-12 py-6 sm:py-10 max-w-6xl mx-auto">
       <Link
         to="/documents"
         className="inline-flex items-center gap-1 text-xs font-mono uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground mb-4"
