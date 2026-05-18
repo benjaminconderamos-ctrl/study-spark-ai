@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import {
   FREE_MONTHLY_DOCS,
+  getUserTier,
   isProUser,
   monthlyDocCount,
 } from "./entitlements.server";
@@ -10,13 +11,18 @@ export const getEntitlements = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { userId } = context;
-    const [isPro, docsUsed] = await Promise.all([isProUser(userId), monthlyDocCount(userId)]);
+    const [tier, docsUsed] = await Promise.all([getUserTier(userId), monthlyDocCount(userId)]);
+    const isPro = tier === "pro" || tier === "max";
+    const isMax = tier === "max";
     return {
+      tier,
       isPro,
+      isMax,
       docsUsed,
       docsLimit: isPro ? null : FREE_MONTHLY_DOCS,
       flashcardLimit: isPro ? 30 : 10,
       tutorAllowed: isPro,
+      mindMapAllowed: isMax,
     };
   });
 
