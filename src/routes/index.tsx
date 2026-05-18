@@ -1,7 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/brand/Logo";
 import { ArrowUpRight } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { UpgradeProDialog } from "@/components/UpgradeProDialog";
+import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 
 export const Route = createFileRoute("/")({
   head: () => ({
