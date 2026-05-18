@@ -22,44 +22,62 @@ import type { MindMap } from "@/lib/ai/services/mindmap.service";
 
 type Props = { documentId: string; ready: boolean; title?: string };
 
-const LEVEL_STYLES: Record<number, React.CSSProperties> = {
-  0: {
-    background: "hsl(217 91% 60%)",
-    color: "white",
-    border: "2px solid hsl(217 91% 50%)",
-    borderRadius: 16,
-    padding: "14px 20px",
-    fontWeight: 600,
-    fontSize: 15,
-    minWidth: 180,
-    textAlign: "center",
-    boxShadow: "0 10px 30px -10px hsl(217 91% 60% / 0.5)",
-  },
-  1: {
-    background: "hsl(270 70% 60%)",
-    color: "white",
-    border: "2px solid hsl(270 70% 50%)",
-    borderRadius: 12,
-    padding: "10px 14px",
-    fontWeight: 500,
-    fontSize: 13,
-    minWidth: 140,
-    textAlign: "center",
-    boxShadow: "0 6px 20px -8px hsl(270 70% 60% / 0.5)",
-  },
-  2: {
-    background: "hsl(243 75% 65%)",
-    color: "white",
-    border: "2px solid hsl(243 75% 55%)",
-    borderRadius: 10,
-    padding: "8px 12px",
-    fontWeight: 400,
-    fontSize: 12,
-    minWidth: 120,
-    textAlign: "center",
-    boxShadow: "0 4px 14px -6px hsl(243 75% 65% / 0.5)",
-  },
-};
+// Minimalist palette: neutral cards, single accent per level (left bar + dot).
+const LEVEL_ACCENT = {
+  0: "hsl(217 91% 60%)", // blue
+  1: "hsl(270 70% 60%)", // purple
+  2: "hsl(243 75% 65%)", // indigo
+} as const;
+
+function nodeLabel(level: 0 | 1 | 2, label: string) {
+  const accent = LEVEL_ACCENT[level];
+  const fontSize = level === 0 ? 15 : level === 1 ? 13 : 12;
+  const fontWeight = level === 0 ? 600 : level === 1 ? 500 : 400;
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        fontSize,
+        fontWeight,
+        lineHeight: 1.25,
+        letterSpacing: level === 0 ? "-0.01em" : 0,
+      }}
+    >
+      <span
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: 999,
+          background: accent,
+          flexShrink: 0,
+        }}
+      />
+      <span>{label}</span>
+    </div>
+  );
+}
+
+function nodeStyle(level: 0 | 1 | 2): React.CSSProperties {
+  const accent = LEVEL_ACCENT[level];
+  const padX = level === 0 ? 18 : level === 1 ? 14 : 12;
+  const padY = level === 0 ? 12 : level === 1 ? 9 : 7;
+  const minWidth = level === 0 ? 180 : level === 1 ? 150 : 130;
+  const maxWidth = level === 0 ? 260 : level === 1 ? 220 : 200;
+  return {
+    background: "hsl(var(--card))",
+    color: "hsl(var(--card-foreground))",
+    border: "1px solid hsl(var(--border))",
+    borderLeft: `3px solid ${accent}`,
+    borderRadius: 8,
+    padding: `${padY}px ${padX}px`,
+    minWidth,
+    maxWidth,
+    boxShadow: "0 1px 2px hsl(0 0% 0% / 0.04)",
+    textAlign: "left",
+  };
+}
 
 function buildGraph(mindmap: MindMap, layout: "radial" | "vertical"): { nodes: Node[]; edges: Edge[] } {
   const nodes: Node[] = [];
