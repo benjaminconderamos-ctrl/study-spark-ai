@@ -3,16 +3,19 @@ import type { ReactNode } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, FileText, Settings as SettingsIcon, LogOut } from "lucide-react";
+import { useT } from "@/i18n/I18nProvider";
+import { LayoutDashboard, FileText, Settings as SettingsIcon, LogOut, LineChart } from "lucide-react";
 
 const NAV = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/documents", label: "Library", icon: FileText },
-  { to: "/settings", label: "Settings", icon: SettingsIcon },
+  { to: "/dashboard", key: "nav.dashboard", icon: LayoutDashboard },
+  { to: "/documents", key: "nav.library", icon: FileText },
+  { to: "/progress", key: "nav.progress", icon: LineChart },
+  { to: "/settings", key: "nav.settings", icon: SettingsIcon },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const { t } = useT();
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -26,7 +29,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Logo to="/dashboard" />
         </div>
         <nav className="flex-1 flex flex-col gap-0.5">
-          {NAV.map(({ to, label, icon: Icon }) => (
+          {NAV.map(({ to, key, icon: Icon }) => (
             <Link
               key={to}
               to={to}
@@ -34,7 +37,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <Icon className="h-4 w-4" strokeWidth={1.5} />
-              <span>{label}</span>
+              <span>{t(key)}</span>
             </Link>
           ))}
         </nav>
@@ -45,7 +48,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           className="justify-start text-muted-foreground hover:text-foreground"
         >
           <LogOut className="h-4 w-4 mr-2" strokeWidth={1.5} />
-          Sign out
+          {t("nav.signOut")}
         </Button>
       </aside>
 
