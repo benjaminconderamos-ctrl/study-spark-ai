@@ -237,7 +237,7 @@ function buildGraph(mindmap: MindMap, layout: "horizontal" | "vertical"): {
 
 function MindMapCanvas({ mindmap, title }: { mindmap: MindMap; title?: string }) {
   const isMobile = useIsMobile();
-  const layout = isMobile ? "vertical" : "radial";
+  const layout: "horizontal" | "vertical" = isMobile ? "vertical" : "horizontal";
 
   const initial = useMemo(() => buildGraph(mindmap, layout), [mindmap, layout]);
   const [nodes, setNodes, onNodesChange] = useNodesState(initial.nodes);
