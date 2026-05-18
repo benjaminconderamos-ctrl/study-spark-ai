@@ -20,8 +20,18 @@ export const Route = createFileRoute("/")({
 });
 
 function LandingPage() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+
+  const handleProClick = () => {
+    if (user) setUpgradeOpen(true);
+    else navigate({ to: "/signup" });
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <PaymentTestModeBanner />
       <header className="border-b border-border">
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
           <Logo />
