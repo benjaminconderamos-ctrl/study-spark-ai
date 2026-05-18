@@ -24,3 +24,15 @@ export const logStudySession = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const resetStudyProgress = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    const { error, count } = await supabase
+      .from("study_sessions")
+      .delete({ count: "exact" })
+      .eq("user_id", userId);
+    if (error) throw new Error(error.message);
+    return { ok: true, deleted: count ?? 0 };
+  });

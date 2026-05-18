@@ -59,6 +59,9 @@ const en: Dict = {
   "progress.empty.desc": "Open a document and start studying — your time will appear here.",
   "progress.minutesShort": "min",
   "progress.secondsShort": "s",
+  "progress.reset": "Reset progress",
+  "progress.resetConfirm": "Delete all your study session history? This cannot be undone.",
+  "progress.resetDone": "Study progress reset.",
 
   // Activities
   "activity.summary": "Summary",
@@ -133,6 +136,9 @@ const esMX: Dict = {
   "progress.empty.desc": "Abre un documento y empieza a estudiar — tu tiempo aparecerá aquí.",
   "progress.minutesShort": "min",
   "progress.secondsShort": "s",
+  "progress.reset": "Reiniciar progreso",
+  "progress.resetConfirm": "¿Eliminar todo tu historial de sesiones de estudio? Esta acción no se puede deshacer.",
+  "progress.resetDone": "Progreso reiniciado.",
 
   // Activities
   "activity.summary": "Resumen",
