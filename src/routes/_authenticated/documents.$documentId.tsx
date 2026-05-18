@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { processDocument, deleteDocument } from "@/lib/documents.functions";
 import { SummaryTab } from "@/components/documents/SummaryTab";
+import { FlashcardsTab } from "@/components/documents/FlashcardsTab";
 
 export const Route = createFileRoute("/_authenticated/documents/$documentId")({
   component: DocumentDetailPage,
