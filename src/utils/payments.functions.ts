@@ -71,6 +71,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         metadata: { userId },
       },
       automatic_tax: { enabled: true },
+      customer_update: { address: "auto" },
     });
 
     return session.client_secret;
