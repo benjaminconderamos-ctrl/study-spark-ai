@@ -80,9 +80,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "StudyFlow AI" },
       { name: "description", content: "AI-powered study workspace. Upload PDFs, get summaries, flashcards, quizzes, and a tutor." },
       { property: "og:title", content: "StudyFlow AI" },
-      { property: "og:description", content: "AI-powered study workspace." },
+      { property: "og:description", content: "AI-powered study workspace. Upload PDFs, get summaries, flashcards, quizzes, and a tutor." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "StudyFlow AI" },
+      { name: "twitter:description", content: "AI-powered study workspace. Upload PDFs, get summaries, flashcards, quizzes, and a tutor." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e6ade595-90f8-43a9-899c-7e6bd26b5c2a/id-preview-6068496f--fe935897-17e5-4c22-bb71-db34ebff4797.lovable.app-1779070200438.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e6ade595-90f8-43a9-899c-7e6bd26b5c2a/id-preview-6068496f--fe935897-17e5-4c22-bb71-db34ebff4797.lovable.app-1779070200438.png" },
     ],
     links: [
       {
