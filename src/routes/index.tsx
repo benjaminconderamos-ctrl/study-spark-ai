@@ -37,7 +37,7 @@ function LandingPage() {
           <Logo />
           <nav className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}>
-              Plans
+              Price
             </Button>
             <Button asChild variant="ghost" size="sm">
               <Link to="/login">Sign in</Link>
