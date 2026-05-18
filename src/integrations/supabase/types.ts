@@ -14,6 +14,109 @@ export type Database = {
   }
   public: {
     Tables: {
+      document_chunks: {
+        Row: {
+          chunk_index: number
+          content: string
+          created_at: string
+          document_id: string
+          id: string
+          token_count: number
+        }
+        Insert: {
+          chunk_index: number
+          content: string
+          created_at?: string
+          document_id: string
+          id?: string
+          token_count?: number
+        }
+        Update: {
+          chunk_index?: number
+          content?: string
+          created_at?: string
+          document_id?: string
+          id?: string
+          token_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_chunks_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          file_path: string
+          file_size: number
+          id: string
+          page_count: number | null
+          status: Database["public"]["Enums"]["document_status"]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          file_path: string
+          file_size?: number
+          id?: string
+          page_count?: number | null
+          status?: Database["public"]["Enums"]["document_status"]
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          file_path?: string
+          file_size?: number
+          id?: string
+          page_count?: number | null
+          status?: Database["public"]["Enums"]["document_status"]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      processed_documents: {
+        Row: {
+          created_at: string
+          document_id: string
+          full_text: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          document_id: string
+          full_text: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          full_text?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "processed_documents_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: true
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -74,6 +177,12 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      document_status:
+        | "uploading"
+        | "pending"
+        | "processing"
+        | "ready"
+        | "failed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -202,6 +311,13 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      document_status: [
+        "uploading",
+        "pending",
+        "processing",
+        "ready",
+        "failed",
+      ],
     },
   },
 } as const
