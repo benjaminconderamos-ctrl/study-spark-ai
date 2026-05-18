@@ -164,8 +164,8 @@ function LandingPage() {
                 ))}
               </ul>
 
-              <Button className="mt-8 w-full" asChild>
-                <Link to="/signup">Start Pro trial</Link>
+              <Button className="mt-8 w-full" onClick={handleProClick}>
+                Start 7-day Pro trial
               </Button>
             </div>
           </div>
@@ -178,6 +178,7 @@ function LandingPage() {
           <span>Built by Benjamin CR</span>
         </div>
       </footer>
+      <UpgradeProDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />
     </div>
   );
 }
