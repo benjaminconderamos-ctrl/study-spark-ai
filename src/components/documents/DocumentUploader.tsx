@@ -94,7 +94,7 @@ export function DocumentUploader() {
         setBusy(false);
       }
     },
-    [navigate, queryClient, runProcess],
+    [navigate, queryClient, runProcess, checkUpload],
   );
 
   return (
