@@ -120,10 +120,12 @@ export type Database = {
         Row: {
           created_at: string
           error_message: string | null
-          file_path: string
+          file_path: string | null
           file_size: number
           id: string
           page_count: number | null
+          source_type: string
+          source_url: string | null
           status: Database["public"]["Enums"]["document_status"]
           title: string
           updated_at: string
@@ -132,10 +134,12 @@ export type Database = {
         Insert: {
           created_at?: string
           error_message?: string | null
-          file_path: string
+          file_path?: string | null
           file_size?: number
           id?: string
           page_count?: number | null
+          source_type?: string
+          source_url?: string | null
           status?: Database["public"]["Enums"]["document_status"]
           title: string
           updated_at?: string
@@ -144,10 +148,12 @@ export type Database = {
         Update: {
           created_at?: string
           error_message?: string | null
-          file_path?: string
+          file_path?: string | null
           file_size?: number
           id?: string
           page_count?: number | null
+          source_type?: string
+          source_url?: string | null
           status?: Database["public"]["Enums"]["document_status"]
           title?: string
           updated_at?: string
