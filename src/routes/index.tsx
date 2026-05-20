@@ -255,7 +255,7 @@ function LandingPage() {
                   t("landing.pricing.max.f1"),
                   t("landing.pricing.max.f2"),
                   t("landing.pricing.max.f3"),
-                  
+                  t("landing.pricing.max.f4"),
                   t("landing.pricing.max.f5"),
                   t("landing.pricing.max.f6"),
                   t("landing.pricing.max.f7"),
