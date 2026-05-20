@@ -33,6 +33,7 @@ export const processDocument = createServerFn({ method: "POST" })
       .eq("id", doc.id);
 
     try {
+      if (!doc.file_path) throw new Error("Document has no file to process");
       // Download via admin (we already verified ownership)
       const { data: file, error: dlErr } = await supabaseAdmin.storage
         .from("documents")
@@ -106,7 +107,7 @@ export const deleteDocument = createServerFn({ method: "POST" })
     if (error || !doc) throw new Error("Document not found");
     if (doc.user_id !== userId) throw new Error("Forbidden");
 
-    await supabaseAdmin.storage.from("documents").remove([doc.file_path]);
+    if (doc.file_path) await supabaseAdmin.storage.from("documents").remove([doc.file_path]);
     await supabaseAdmin.from("documents").delete().eq("id", doc.id);
     return { ok: true as const };
   });
