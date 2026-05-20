@@ -263,6 +263,27 @@ export type Database = {
           },
         ]
       }
+      plan_invites: {
+        Row: {
+          created_at: string
+          id: string
+          invitee_email: string
+          owner_user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invitee_email: string
+          owner_user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invitee_email?: string
+          owner_user_id?: string
+        }
+        Relationships: []
+      }
       processed_documents: {
         Row: {
           created_at: string
