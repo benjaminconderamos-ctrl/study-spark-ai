@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
+import { Route as AuthConfirmRouteImport } from './routes/auth.confirm'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedProgressRouteImport } from './routes/_authenticated/progress'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -43,6 +44,11 @@ const IndexRoute = IndexRouteImport.update({
 const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
   id: '/checkout/return',
   path: '/checkout/return',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthConfirmRoute = AuthConfirmRouteImport.update({
+  id: '/auth/confirm',
+  path: '/auth/confirm',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/auth/confirm': typeof AuthConfirmRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/documents/$documentId': typeof AuthenticatedDocumentsDocumentIdRoute
   '/documents/': typeof AuthenticatedDocumentsIndexRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/progress': typeof AuthenticatedProgressRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/auth/confirm': typeof AuthConfirmRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/documents/$documentId': typeof AuthenticatedDocumentsDocumentIdRoute
   '/documents': typeof AuthenticatedDocumentsIndexRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/progress': typeof AuthenticatedProgressRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/auth/confirm': typeof AuthConfirmRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/_authenticated/documents/$documentId': typeof AuthenticatedDocumentsDocumentIdRoute
   '/_authenticated/documents/': typeof AuthenticatedDocumentsIndexRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/progress'
     | '/settings'
+    | '/auth/confirm'
     | '/checkout/return'
     | '/documents/$documentId'
     | '/documents/'
@@ -138,6 +148,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/progress'
     | '/settings'
+    | '/auth/confirm'
     | '/checkout/return'
     | '/documents/$documentId'
     | '/documents'
@@ -151,6 +162,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/progress'
     | '/_authenticated/settings'
+    | '/auth/confirm'
     | '/checkout/return'
     | '/_authenticated/documents/$documentId'
     | '/_authenticated/documents/'
@@ -162,6 +174,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  AuthConfirmRoute: typeof AuthConfirmRoute
   CheckoutReturnRoute: typeof CheckoutReturnRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
@@ -201,6 +214,13 @@ declare module '@tanstack/react-router' {
       path: '/checkout/return'
       fullPath: '/checkout/return'
       preLoaderRoute: typeof CheckoutReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/confirm': {
+      id: '/auth/confirm'
+      path: '/auth/confirm'
+      fullPath: '/auth/confirm'
+      preLoaderRoute: typeof AuthConfirmRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/settings': {
@@ -273,19 +293,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  AuthConfirmRoute: AuthConfirmRoute,
   CheckoutReturnRoute: CheckoutReturnRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

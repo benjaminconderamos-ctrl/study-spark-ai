@@ -29,9 +29,12 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [needsConfirmation, setNeedsConfirmation] = useState(false);
+  const [resending, setResending] = useState(false);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setNeedsConfirmation(false);
     const parsed = schema.safeParse({ email, password });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0].message);
@@ -41,10 +44,40 @@ function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword(parsed.data);
     setSubmitting(false);
     if (error) {
+      if (/email not confirmed/i.test(error.message)) {
+        setNeedsConfirmation(true);
+        toast.error("Tu correo aún no está confirmado. Reenvía el enlace y vuelve a intentarlo.");
+        return;
+      }
       toast.error(error.message);
       return;
     }
     router.navigate({ to: "/dashboard" });
+  };
+
+  const onResendConfirmation = async () => {
+    const parsed = z.string().trim().email().safeParse(email);
+    if (!parsed.success) {
+      toast.error("Escribe un correo válido para reenviar la confirmación.");
+      return;
+    }
+
+    setResending(true);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: parsed.data,
+      options: {
+        emailRedirectTo: window.location.origin + "/auth/confirm",
+      },
+    });
+    setResending(false);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    toast.success("Te reenviamos el correo de confirmación.");
   };
 
   const onGoogle = async () => {
@@ -96,6 +129,11 @@ function LoginPage() {
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? "Signing in..." : "Sign in"}
             </Button>
+            {needsConfirmation ? (
+              <Button type="button" variant="outline" className="w-full" onClick={onResendConfirmation} disabled={resending}>
+                {resending ? "Reenviando confirmación..." : "Reenviar correo de confirmación"}
+              </Button>
+            ) : null}
           </form>
 
           <div className="relative">
