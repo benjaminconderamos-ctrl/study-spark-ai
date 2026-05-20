@@ -55,7 +55,7 @@ function AuthConfirmPage() {
         if (params.tokenHash && params.type) {
           const { error } = await supabase.auth.verifyOtp({
             token_hash: params.tokenHash,
-            type: params.type as "email" | "recovery" | "invite" | "email_change" | "magiclink",
+            type: params.type as "signup" | "email" | "recovery" | "invite" | "email_change" | "magiclink",
           });
           if (error) throw error;
 
