@@ -44,7 +44,7 @@ function SignupPage() {
       email: parsed.data.email,
       password: parsed.data.password,
       options: {
-        emailRedirectTo: window.location.origin + "/dashboard",
+        emailRedirectTo: window.location.origin + "/auth/confirm",
         data: { display_name: parsed.data.displayName },
       },
     });
