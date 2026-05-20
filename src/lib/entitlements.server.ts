@@ -89,6 +89,11 @@ export async function isMaxUser(userId: string): Promise<boolean> {
   return (await getUserTier(userId)) === "max";
 }
 
+/** Only true if the user owns a MAX subscription (invites don't count). */
+export async function isOwnMaxUser(userId: string): Promise<boolean> {
+  return (await getOwnTier(userId)) === "max";
+}
+
 export async function monthlyDocCount(userId: string): Promise<number> {
   const start = new Date();
   start.setUTCDate(1);
