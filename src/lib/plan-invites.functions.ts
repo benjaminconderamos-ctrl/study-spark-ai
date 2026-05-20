@@ -12,8 +12,8 @@ const EmailInput = z.object({
 const IdInput = z.object({ id: z.string().uuid() });
 
 async function ensureOwnerIsMax(userId: string) {
-  const { isMaxUser } = await import("./entitlements.server");
-  if (!(await isMaxUser(userId))) {
+  const { isOwnMaxUser } = await import("./entitlements.server");
+  if (!(await isOwnMaxUser(userId))) {
     throw new Error("Solo los usuarios con plan Max pueden invitar.");
   }
 }
