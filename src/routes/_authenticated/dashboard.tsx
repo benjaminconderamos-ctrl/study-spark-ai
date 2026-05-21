@@ -46,6 +46,8 @@ function QuickAction({ to, icon: Icon, title, desc }: { to: string; icon: typeof
 
 function DashboardPage() {
   const { t } = useT();
+  const { data: ent } = useEntitlements();
+  const isMax = !!ent?.isMax;
   const { data: stats, isLoading } = useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
