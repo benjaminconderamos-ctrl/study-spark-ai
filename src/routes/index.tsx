@@ -260,6 +260,8 @@ function LandingPage() {
                   t("landing.pricing.max.f6"),
                   t("landing.pricing.max.f7"),
                   t("landing.pricing.max.f8"),
+                  t("landing.pricing.max.f9"),
+                  t("landing.pricing.max.f10"),
                 ].map((feature) => (
                   <li key={feature} className="flex items-start gap-3 text-sm text-foreground">
                     <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-accent-ink shrink-0" />
