@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowUpRight, Upload, FileText, Brain, MessageSquare } from "lucide-react";
+import { ArrowUpRight, Upload, FileText, Brain, MessageSquare, Calculator, Lock, Sparkles } from "lucide-react";
 import { PageHeader } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { useT } from "@/i18n/I18nProvider";
+import { useEntitlements } from "@/hooks/use-entitlements";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
@@ -45,6 +46,8 @@ function QuickAction({ to, icon: Icon, title, desc }: { to: string; icon: typeof
 
 function DashboardPage() {
   const { t } = useT();
+  const { data: ent } = useEntitlements();
+  const isMax = !!ent?.isMax;
   const { data: stats, isLoading } = useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
@@ -114,6 +117,43 @@ function DashboardPage() {
           <QuickAction to="/documents" icon={Brain} title={t("dash.qa.cards.title")} desc={t("dash.qa.cards.desc")} />
           <QuickAction to="/documents" icon={MessageSquare} title={t("dash.qa.tutor.title")} desc={t("dash.qa.tutor.desc")} />
         </div>
+      </section>
+
+      <section className="mt-12 space-y-4">
+        <div className="flex items-center gap-3">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{t("dash.maxTools")}</p>
+          <span className="font-mono text-[9px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-foreground text-background">Max</span>
+        </div>
+        <Link
+          to="/math"
+          className="group relative block border border-border bg-card hover:bg-accent transition-colors rounded-lg p-6 overflow-hidden"
+        >
+          <div className="flex items-start gap-5">
+            <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-pink-500/15 to-blue-500/15 flex items-center justify-center shrink-0">
+              <Calculator className="h-6 w-6 text-foreground" strokeWidth={1.5} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="font-serif text-xl text-foreground">{t("dash.qa.math.title")}</p>
+                {!isMax && (
+                  <span className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full border border-border text-muted-foreground">
+                    <Lock className="h-3 w-3" strokeWidth={1.5} /> Max
+                  </span>
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">{t("dash.qa.math.desc")}</p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                <span className="text-[11px] px-2 py-1 rounded-md bg-muted/60 text-muted-foreground font-mono">{t("dash.qa.math.tag1")}</span>
+                <span className="text-[11px] px-2 py-1 rounded-md bg-muted/60 text-muted-foreground font-mono">{t("dash.qa.math.tag2")}</span>
+                <span className="text-[11px] px-2 py-1 rounded-md bg-muted/60 text-muted-foreground font-mono">{t("dash.qa.math.tag3")}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 text-sm font-medium text-foreground shrink-0">
+              <Sparkles className="h-4 w-4" strokeWidth={1.5} />
+              <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" strokeWidth={1.5} />
+            </div>
+          </div>
+        </Link>
       </section>
 
       <section className="mt-16 space-y-4">
