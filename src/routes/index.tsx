@@ -260,6 +260,8 @@ function LandingPage() {
                   t("landing.pricing.max.f6"),
                   t("landing.pricing.max.f7"),
                   t("landing.pricing.max.f8"),
+                  t("landing.pricing.max.f9"),
+                  t("landing.pricing.max.f10"),
                 ].map((feature) => (
                   <li key={feature} className="flex items-start gap-3 text-sm text-foreground">
                     <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-accent-ink shrink-0" />
@@ -274,27 +276,123 @@ function LandingPage() {
             </div>
           </div>
 
-          {/* FAQ */}
-          <div className="mt-24 max-w-2xl mx-auto">
-            <h3 className="font-serif text-3xl text-foreground text-center mb-8">
-              {t("landing.faq.title")}
-            </h3>
-            <Accordion type="single" collapsible className="w-full">
-              {[
-                { q: t("landing.faq.q1"), a: t("landing.faq.a1") },
-                { q: t("landing.faq.q2"), a: t("landing.faq.a2") },
-                { q: t("landing.faq.q3"), a: t("landing.faq.a3") },
-                { q: t("landing.faq.q4"), a: t("landing.faq.a4") },
-              ].map((item, i) => (
-                <AccordionItem key={i} value={`item-${i}`}>
-                  <AccordionTrigger className="text-base">{item.q}</AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground">{item.a}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+        </div>
+      </section>
+
+      {/* Math Made Visual */}
+      <section id="math" className="border-t border-border">
+        <div className="max-w-6xl mx-auto px-6 py-24 lg:py-32">
+          <div className="text-center mb-12">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-4">
+              {t("landing.math.kicker")}
+            </p>
+            <h2 className="font-serif text-4xl md:text-5xl text-foreground">
+              {t("landing.math.title")}
+            </h2>
+            <p className="mt-6 max-w-2xl mx-auto text-muted-foreground">
+              {t("landing.math.desc")}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Problem + solution */}
+            <div className="border border-border bg-card rounded-lg p-8 flex flex-col">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                {t("landing.math.problemLabel")}
+              </p>
+              <p className="font-serif text-2xl text-foreground mb-8">
+                {t("landing.math.problem")}
+              </p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                {t("landing.math.solutionLabel")}
+              </p>
+              <ol className="space-y-3 text-sm text-foreground">
+                {[
+                  t("landing.math.step1"),
+                  t("landing.math.step2"),
+                  t("landing.math.step3"),
+                  t("landing.math.step4"),
+                ].map((s) => (
+                  <li key={s} className="flex items-start gap-3">
+                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-accent-ink shrink-0" />
+                    <span>{s}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            {/* Graph */}
+            <div className="border border-border bg-card rounded-lg p-8 flex flex-col">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                {t("landing.math.graphLabel")}
+              </p>
+              <div className="flex-1 min-h-[280px] rounded-md bg-background border border-border p-4 flex items-center justify-center">
+                <svg viewBox="0 0 320 240" className="w-full h-full" aria-label="Graph of f(x) = x^3 - 3x^2 + 2">
+                  {/* grid */}
+                  <g stroke="hsl(var(--border))" strokeWidth="0.5">
+                    {Array.from({ length: 9 }).map((_, i) => (
+                      <line key={`v${i}`} x1={i * 40} y1="0" x2={i * 40} y2="240" />
+                    ))}
+                    {Array.from({ length: 7 }).map((_, i) => (
+                      <line key={`h${i}`} x1="0" y1={i * 40} x2="320" y2={i * 40} />
+                    ))}
+                  </g>
+                  {/* axes */}
+                  <line x1="0" y1="120" x2="320" y2="120" stroke="hsl(var(--muted-foreground))" strokeWidth="1" />
+                  <line x1="160" y1="0" x2="160" y2="240" stroke="hsl(var(--muted-foreground))" strokeWidth="1" />
+                  {/* curve: f(x) = x^3 - 3x^2 + 2, mapped x in [-1.5, 3.5] -> [0, 320], y in [-4, 4] -> [240, 0] */}
+                  <path
+                    d={(() => {
+                      const pts: string[] = [];
+                      for (let i = 0; i <= 100; i++) {
+                        const x = -1.5 + (i / 100) * 5;
+                        const y = x * x * x - 3 * x * x + 2;
+                        const sx = ((x + 1.5) / 5) * 320;
+                        const sy = 120 - (y / 4) * 120;
+                        if (sy < -20 || sy > 260) continue;
+                        pts.push(`${i === 0 ? "M" : "L"}${sx.toFixed(1)},${sy.toFixed(1)}`);
+                      }
+                      return pts.join(" ");
+                    })()}
+                    fill="none"
+                    stroke="hsl(var(--primary))"
+                    strokeWidth="2.5"
+                  />
+                  {/* extrema points */}
+                  <circle cx={((0 + 1.5) / 5) * 320} cy={120 - (2 / 4) * 120} r="4" fill="hsl(var(--primary))" />
+                  <circle cx={((2 + 1.5) / 5) * 320} cy={120 - (-2 / 4) * 120} r="4" fill="hsl(var(--primary))" />
+                </svg>
+              </div>
+              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground text-center">
+                {t("landing.math.graphCaption")}
+              </p>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* FAQ */}
+      <section id="faq" className="border-t border-border">
+        <div className="max-w-2xl mx-auto px-6 py-24 lg:py-32">
+          <h3 className="font-serif text-3xl text-foreground text-center mb-8">
+            {t("landing.faq.title")}
+          </h3>
+          <Accordion type="single" collapsible className="w-full">
+            {[
+              { q: t("landing.faq.q1"), a: t("landing.faq.a1") },
+              { q: t("landing.faq.q2"), a: t("landing.faq.a2") },
+              { q: t("landing.faq.q3"), a: t("landing.faq.a3") },
+              { q: t("landing.faq.q4"), a: t("landing.faq.a4") },
+            ].map((item, i) => (
+              <AccordionItem key={i} value={`item-${i}`}>
+                <AccordionTrigger className="text-base">{item.q}</AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">{item.a}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
 
       <footer className="border-t border-border">
         <div className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between text-xs font-mono text-muted-foreground">
