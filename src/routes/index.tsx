@@ -54,12 +54,20 @@ function LandingPage() {
               {t("landing.nav.price")}
             </Button>
             <LanguageToggle />
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/login">{t("landing.nav.signin")}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link to="/signup">{t("landing.nav.getStarted")}</Link>
-            </Button>
+            {user ? (
+              <Button asChild size="sm">
+                <Link to="/dashboard">{t("nav.dashboard")}</Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild variant="ghost" size="sm">
+                  <Link to="/login">{t("landing.nav.signin")}</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link to="/signup">{t("landing.nav.getStarted")}</Link>
+                </Button>
+              </>
+            )}
           </nav>
         </div>
       </header>
@@ -77,14 +85,24 @@ function LandingPage() {
               {t("landing.hero.desc")}
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
-              <Button asChild size="lg">
-                <Link to="/signup">
-                  {t("landing.hero.start")} <ArrowUpRight className="h-4 w-4 ml-1" strokeWidth={1.5} />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/login">{t("landing.hero.haveAccount")}</Link>
-              </Button>
+              {user ? (
+                <Button asChild size="lg">
+                  <Link to="/dashboard">
+                    {t("nav.dashboard")} <ArrowUpRight className="h-4 w-4 ml-1" strokeWidth={1.5} />
+                  </Link>
+                </Button>
+              ) : (
+                <>
+                  <Button asChild size="lg">
+                    <Link to="/signup">
+                      {t("landing.hero.start")} <ArrowUpRight className="h-4 w-4 ml-1" strokeWidth={1.5} />
+                    </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline">
+                    <Link to="/login">{t("landing.hero.haveAccount")}</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 
