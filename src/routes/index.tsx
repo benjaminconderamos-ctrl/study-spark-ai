@@ -54,12 +54,20 @@ function LandingPage() {
               {t("landing.nav.price")}
             </Button>
             <LanguageToggle />
-            <Button asChild variant="ghost" size="sm">
-              <Link to="/login">{t("landing.nav.signin")}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link to="/signup">{t("landing.nav.getStarted")}</Link>
-            </Button>
+            {user ? (
+              <Button asChild size="sm">
+                <Link to="/dashboard">{t("nav.dashboard")}</Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild variant="ghost" size="sm">
+                  <Link to="/login">{t("landing.nav.signin")}</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link to="/signup">{t("landing.nav.getStarted")}</Link>
+                </Button>
+              </>
+            )}
           </nav>
         </div>
       </header>
