@@ -85,14 +85,24 @@ function LandingPage() {
               {t("landing.hero.desc")}
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
-              <Button asChild size="lg">
-                <Link to="/signup">
-                  {t("landing.hero.start")} <ArrowUpRight className="h-4 w-4 ml-1" strokeWidth={1.5} />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/login">{t("landing.hero.haveAccount")}</Link>
-              </Button>
+              {user ? (
+                <Button asChild size="lg">
+                  <Link to="/dashboard">
+                    {t("nav.dashboard")} <ArrowUpRight className="h-4 w-4 ml-1" strokeWidth={1.5} />
+                  </Link>
+                </Button>
+              ) : (
+                <>
+                  <Button asChild size="lg">
+                    <Link to="/signup">
+                      {t("landing.hero.start")} <ArrowUpRight className="h-4 w-4 ml-1" strokeWidth={1.5} />
+                    </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline">
+                    <Link to="/login">{t("landing.hero.haveAccount")}</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 
